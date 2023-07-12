@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\WebApi_Mongo_Docker.props" />
+</Project>
