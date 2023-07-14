@@ -1,0 +1,53 @@
+# Please refer https://aka.ms/HTTPSinContainer on how to setup an https developer certificate for your ASP.NET Core service.
+
+version: '3.4'
+
+services:
+  user-masstransit:
+    image: user-masstransit
+    build:
+      context: ./
+      dockerfile: ./user/Dockerfile
+    ports:
+      - 5000:5000
+    depends_on:
+      - rabbit-mq
+      - user-mongo
+  
+  user-mongo:
+    image: mongo:jammy
+    ports:
+      - 27017:27017
+    volumes:
+      - user-mongo-vol:/data/db
+  
+  blog-masstransit:
+    image: blog-masstransit
+    build:
+      context: ./
+      dockerfile: ./blog/Dockerfile
+    ports:
+      - 5001:5001
+    depends_on:
+      - rabbit-mq
+      - blog-mongo
+
+  blog-mongo:
+    image: mongo:jammy
+    command: mongod --port 27018
+    ports:
+      - 27018:27018
+    volumes:
+      - blog-mongo-vol:/data/db
+
+  rabbit-mq:
+    hostname: "rabbitmq"
+    image: masstransit/rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+
+volumes:
+  user-mongo-vol:
+  
+  blog-mongo-vol:
