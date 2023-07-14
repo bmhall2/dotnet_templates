@@ -1,8 +1,8 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using blog.Blog;
-
-namespace blog.Controllers;
+using Models;
 
 [ApiController]
 [Route("api/blog")]
@@ -16,13 +16,13 @@ public class BlogController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<List<Blog.Blog>> Get()
+    public async Task<List<Blog>> Get()
     {
         return await mediator.Send(new RetrieveBlogs());
     }
 
     [HttpGet("{id:length(24)}")]
-    public async Task<ActionResult<Blog.Blog>> Get(string id)
+    public async Task<ActionResult<Blog>> Get(string id)
     {
         var blog = await mediator.Send(new RetrieveBlog(id));
 
@@ -35,7 +35,7 @@ public class BlogController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post(Blog.Blog blog)
+    public async Task<IActionResult> Post(Blog blog)
     {
         await mediator.Send(new CreateBlog(blog));
 
@@ -43,7 +43,7 @@ public class BlogController : ControllerBase
     }
 
     [HttpPut("{id:length(24)}")]
-    public async Task<IActionResult> Update(string id, Blog.Blog updatedBlog)
+    public async Task<IActionResult> Update(string id, Blog updatedBlog)
     {
         var blog = await mediator.Send(new RetrieveBlog(id));
 

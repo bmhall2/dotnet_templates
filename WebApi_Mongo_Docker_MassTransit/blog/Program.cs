@@ -1,8 +1,7 @@
 using System.Reflection;
 using MassTransit;
 using MongoDB.Driver;
-using blog.Settings;
-using blog.Blog;
+using Models;
 
 var builder = WebApplication.CreateBuilder(args);
 

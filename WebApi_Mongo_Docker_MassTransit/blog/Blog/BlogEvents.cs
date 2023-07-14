@@ -1,6 +1,6 @@
+using System.Collections.Generic;
 using MediatR;
-
-namespace blog.Blog;
+using Models;
 
 public class CreateBlog : IRequest<string>
 {

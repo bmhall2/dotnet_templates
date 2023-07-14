@@ -11,17 +11,17 @@ USER appuser
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["blog/blog.csproj", "blog/"]
-COPY ["user.contract/user.contract.csproj", "user.contract/"]
-RUN dotnet restore "blog/blog.csproj"
+COPY ["Blog/Blog.csproj", "Blog/"]
+COPY ["User.Contract/User.Contract.csproj", "User.Contract/"]
+RUN dotnet restore "Blog/Blog.csproj"
 COPY . .
-WORKDIR "/src/blog"
-RUN dotnet build "blog.csproj" -c Release -o /app/build
+WORKDIR "/src/Blog"
+RUN dotnet build "Blog.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "blog.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Blog.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "blog.dll"]
+ENTRYPOINT ["dotnet", "Blog.dll"]

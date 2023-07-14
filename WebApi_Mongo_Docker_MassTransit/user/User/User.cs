@@ -1,9 +1,7 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace user.User;
-
-public class User
+public class UserRecord
 {
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]

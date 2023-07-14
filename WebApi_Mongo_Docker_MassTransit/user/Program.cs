@@ -1,8 +1,6 @@
 using System.Reflection;
 using MassTransit;
 using MongoDB.Driver;
-using user.Settings;
-using user.User;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,8 +13,8 @@ var mongoClient = new MongoClient(config.GetValue<string>("ConnectionString"));
 builder.Services.AddSingleton<MongoClient>(mongoClient);
 
 var mongoDatabase = mongoClient.GetDatabase(config.GetValue<string>("DatabaseName"));
-var userCollection = mongoDatabase.GetCollection<User>("user");
-builder.Services.AddSingleton<IMongoCollection<User>>(userCollection);
+var userCollection = mongoDatabase.GetCollection<UserRecord>("user");
+builder.Services.AddSingleton<IMongoCollection<UserRecord>>(userCollection);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

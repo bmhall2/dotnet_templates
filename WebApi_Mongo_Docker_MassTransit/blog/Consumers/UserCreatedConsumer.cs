@@ -1,5 +1,7 @@
+using System.Threading.Tasks;
 using MassTransit;
-using user.contract;
+using Microsoft.Extensions.Logging;
+using User.Contract;
 
 public class UserCreatedConsumer : IConsumer<UserCreated>
 {

@@ -1,8 +1,7 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using user.User;
-
-namespace user.Controllers;
 
 [ApiController]
 [Route("api/user")]
@@ -16,13 +15,13 @@ public class UserController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<List<User.User>> Get()
+    public async Task<List<User>> Get()
     {
-        return await mediator.Send(new RetrieveUsers());
+        return await mediator.Send(new RetrieveUsersRequest());
     }
 
     [HttpGet("{id:length(24)}")]
-    public async Task<ActionResult<User.User>> Get(string id)
+    public async Task<ActionResult<User>> Get(string id)
     {
         var user = await mediator.Send(new RetrieveUser(id));
 
@@ -35,15 +34,15 @@ public class UserController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post(User.User user)
+    public async Task<IActionResult> Post(CreateUserRequest request)
     {
-        await mediator.Send(new CreateUser(user));
+        var id = await mediator.Send(request);
 
-        return CreatedAtAction(nameof(Get), new { id = user.Id }, user);
+        return CreatedAtAction(nameof(Get), new { id = id }, user);
     }
 
     [HttpPut("{id:length(24)}")]
-    public async Task<IActionResult> Update(string id, User.User updatedUser)
+    public async Task<IActionResult> Update(string id, UpdateUserRequest request)
     {
         var user = await mediator.Send(new RetrieveUser(id));
 

@@ -1,4 +1,4 @@
-﻿namespace user.contract;
+﻿namespace User.Contract;
 
 public class UserCreated
 {

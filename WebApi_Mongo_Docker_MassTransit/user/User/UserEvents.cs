@@ -1,23 +1,6 @@
 using MediatR;
 
-namespace user.User;
-
-public class CreateUser : IRequest<string>
-{
-    public CreateUser(User user)
-    {
-        this.User = user;
-    }
-
-    public User User { get; set; }
-}
-
-public class RetrieveUsers : IRequest<List<User>>
-{
-
-}
-
-public class RetrieveUser : IRequest<User>
+public class RetrieveUser : IRequest<UserRecord>
 {
     public RetrieveUser(string userId)
     {

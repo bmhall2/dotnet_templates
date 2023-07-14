@@ -1,17 +1,15 @@
 using MassTransit;
 using MediatR;
 using MongoDB.Driver;
-using user.contract;
+using User.Contract;
 
-namespace user.User;
-
-public class CreateUserHandler : IRequestHandler<CreateUser, string>
+public class CreateUserHandler : IRequestHandler<CreateUserRequest, string>
 {
-    private readonly IMongoCollection<User> userCollection;
+    private readonly IMongoCollection<UserRecord> userCollection;
     private readonly IBus bus;
 
     public CreateUserHandler(
-        IMongoCollection<User> userCollection,
+        IMongoCollection<UserRecord> userCollection,
         IBus bus
     )
     {
@@ -19,36 +17,39 @@ public class CreateUserHandler : IRequestHandler<CreateUser, string>
         this.bus = bus;
     }
 
-    public async Task<string> Handle(CreateUser request, CancellationToken cancellationToken)
+    public async Task<string> Handle(CreateUserRequest request, CancellationToken cancellationToken)
     {
         if (request == null || request.User == null || request.User.Name == null)
             throw new Exception("Invalid user object");
 
-        var user = request.User;
+        var user = new UserRecord
+        {
+            Name = request.User.Name
+        };
 
         await userCollection.InsertOneAsync(user);
 
         if (user.Id == null)
             throw new Exception("Malformed user post insert");
 
-        await bus.Publish(new contract.UserCreated(new contract.User(user.Id, user.Name)));
+        await bus.Publish(new UserCreated(new User.Contract.User(user.Id, user.Name)));
 
         return user.Id ?? "error";
     }
 }
 
-public class RetrieveUsersHandler : IRequestHandler<RetrieveUsers, List<User>>
+public class RetrieveUsersHandler : IRequestHandler<RetrieveUsersRequest, List<UserRecord>>
 {
-    private readonly IMongoCollection<User> userCollection;
+    private readonly IMongoCollection<UserRecord> userCollection;
 
     public RetrieveUsersHandler(
-        IMongoCollection<User> userCollection
+        IMongoCollection<UserRecord> userCollection
     )
     {
         this.userCollection = userCollection;
     }
 
-    public async Task<List<User>> Handle(RetrieveUsers request, CancellationToken cancellationToken)
+    public async Task<List<UserRecord>> Handle(RetrieveUsersRequest request, CancellationToken cancellationToken)
     {
         return await userCollection.Find(_ => true).ToListAsync();
     }
@@ -71,24 +72,28 @@ public class RetrieveUserHandler : IRequestHandler<RetrieveUser, User>
     }
 }
 
-public class UpdateUserHandler : IRequestHandler<UpdateUser>
+public class UpdateUserHandler : IRequestHandler<UpdateUserRequest>
 {
-    private readonly IMongoCollection<User> userCollection;
+    private readonly IMongoCollection<UserRecord> userCollection;
 
     public UpdateUserHandler(
-        IMongoCollection<User> userCollection
+        IMongoCollection<UserRecord> userCollection
     )
     {
         this.userCollection = userCollection;
     }
 
-    async Task IRequestHandler<UpdateUser>.Handle(UpdateUser request, CancellationToken cancellationToken)
+    async Task IRequestHandler<UpdateUserRequest>.Handle(UpdateUserRequest request, CancellationToken cancellationToken)
     {
         if (request == null || request.User == null)
             throw new Exception("Invalid user object");
 
-        var user = request.User;
-        await userCollection.ReplaceOneAsync(x => x.Id == request.UserId, user);
+        var user = new UserRecord
+        {
+            Name = request.User.Name
+        };
+
+        await userCollection.ReplaceOneAsync(x => x.Id == request.Id, user);
     }
 }
 

@@ -11,11 +11,11 @@ USER appuser
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["user/user.csproj", "user/"]
-COPY ["user.contract/user.contract.csproj", "user.contract/"]
-RUN dotnet restore "user/user.csproj"
+COPY ["User/user.csproj", "user/"]
+COPY ["User.Contract/User.Contract.csproj", "User.Contract/"]
+RUN dotnet restore "User/user.csproj"
 COPY . .
-WORKDIR "/src/user"
+WORKDIR "/src/User"
 RUN dotnet build "user.csproj" -c Release -o /app/build
 
 FROM build AS publish
