@@ -3,13 +3,19 @@ using WebApi_Postgres_Docker_GraphQL.Services;
 
 namespace WebApi_Postgres_Docker_GraphQL.Queries;
 
-public class UserQueries
+[ExtendObjectType(typeof(Query))]
+public class UserQueries : Query
 {
     private readonly UserService _userService;
 
     public UserQueries(UserService userService)
     {
         _userService = userService;
+    }
+
+    public List<User> GetUsers()
+    {
+        return _userService.GetAsync().Result;
     }
 
     public User? GetUser(Guid id)

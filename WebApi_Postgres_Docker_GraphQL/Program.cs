@@ -10,9 +10,12 @@ builder.Services.Configure<UserDatabaseSettings>(
 
 builder.Services
     .AddGraphQLServer()
-    .AddQueryType<UserQueries>();
+    .AddQueryType<Query>()
+        .AddTypeExtension<UserQueries>()
+        .AddTypeExtension<GroupQueries>();
 
 builder.Services.AddSingleton<UserService>();
+builder.Services.AddSingleton<GroupService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
