@@ -1,3 +1,4 @@
+using WebApi_Postgres_Docker_GraphQL.Queries;
 using WebApi_Postgres_Docker_GraphQL.Services;
 using WebApi_Postgres_Docker_GraphQL.Settings;
 
@@ -6,6 +7,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.Configure<UserDatabaseSettings>(
     builder.Configuration.GetSection("UserDatabase"));
+
+builder.Services
+    .AddGraphQLServer()
+    .AddQueryType<UserQueries>();
 
 builder.Services.AddSingleton<UserService>();
 
@@ -21,6 +26,7 @@ var app = builder.Build();
 //{
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.MapGraphQL();
 //}
 
 app.UseAuthorization();

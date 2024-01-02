@@ -1,5 +1,3 @@
-using System.Text.Json.Serialization;
-
 namespace WebApi_Postgres_Docker_GraphQL.Domain;
 
 public class User
